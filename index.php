@@ -1,4 +1,37 @@
-<?php session_start(); ?>
+<?php 
+    session_start();
+    include('../conn/function.php');
+    if(isset($_GET['logout']))
+    { if(isset($_SESSION['pctrl_user'])) unset($_SESSION['pctrl_user']);  }
+    else{
+        if(!isset($_SESSION['pctrl_user'])){
+            $pctrl_id = 3;
+            if(!(isset($_SESSION['user_mtworld'])&&$_SESSION['user_mtworld']>0)){
+                if(isset($_COOKIE['mtworldPass'])&&isset($_COOKIE['mtworldKey'])){
+                    $sql="select * from usuario where email='{$_COOKIE['mtworldPass']}' and senha='{$_COOKIE['mtworldKey']}';";
+                    if($linha = (enviarComand($sql,'bd_mtworld'))->fetch_assoc()){
+                      $_SESSION['user_mtworld'] = $linha['id'];
+                      $_SESSION['user_mtworld_nome'] = $linha['nome'];
+                      $_SESSION['user_mtworld_email'] = $linha['email'];
+                    } 
+                }
+            }
+            if(isset($_SESSION['user_mtworld'])&&$_SESSION['user_mtworld']>0){
+                $sql = "select * from user_sites where sites_id='$pctrl_id' and usuario_id='{$_SESSION['user_mtworld']}';";
+                $linha = (enviarComand($sql,'bd_mtworld'))->fetch_assoc();
+                if(isset($linha['status'])&&$linha['status']=='ativo'){
+                  $search = "select * from usuario where email='{$linha['login']}' and senha='{$linha['senha']}';";
+                  $data = enviarComand($search,'bd_pctrl');
+                  if($result = $data->fetch_assoc()){
+                      $_SESSION['pctrl_user'] = $result['id'];
+                      header('Location: dashboard/');
+                  }
+                }
+            }
+        }
+        else header('Location: dashboard/');
+    }
+?>
 <!doctype html>
 <html lang="pt-br">
   <head>
@@ -22,7 +55,8 @@
            <?php if(isset($_GET['cadastrar'])){ ?> alterDiv('Cadastrar');                      <?php }else ?> 
            <?php if(isset($_GET['sobre']))    { ?> alterDiv('Sobre');                          <?php }     ?> 
            <?php if(isset($_GET['msg']))      { ?> mostraMsg(<?php echo $_GET['msg']; ?>);     <?php }     ?> 
-           <?php if(isset($_GET['mtworld']))  { ?> mostraMsg(<?php echo "'mtworld'"; ?>); <?php }     ?>
+           <?php if(isset($_GET['mtworld']))  { ?> mostraMsg(<?php echo "'mtworld'"; ?>);      <?php }     ?>
+           <?php if(isset($_GET['logout']))   { ?> mostraMsg(<?php echo "0"; ?>);       <?php }     ?>
         });
         function msg(p,arr){ 
             if(arr[p]){ $('#modalMsgBody').html(arr[p]); $('#modalMsgAutoClick').click(); }
@@ -33,23 +67,42 @@
         function mostraMsg(p){
             if(p=="mtworld"){
                 content = "<div class='bg-light border border-secondary px-1 pb-1 pt-0 mb-2 rounded d-flex justify-content-center text-dark flex-column' style='opacity:.6'>";
-                    content += "<small class='border-bottom border-secondary mb-1' style='font-size: 7pt; opacity: .85;'>Vincular com MatthewsWorld</small>";
-                    content += "<span class='material-icons'>ac_unit</span>";
+                content += "<small class='border-bottom border-secondary mb-1' style='font-size: 7pt; opacity: .85;'>";
+                content += "Vincular com MatthewsWorld";
+                content += "</small>";
+                content += "<span class='material-icons'>ac_unit</span>";                
                 content += "</div>";
+                
                 $('#modalLog .modal-body').prepend(content);
-                $('#modalLog .modal-footer').prepend("<button type='button' class='btn btn-outline-light btn-block' onclick=\"alterDiv('Cadastrar');\" data-dismiss='modal'>Cadastrar-se</button><br/>");
+                $('#modalLog .modal-footer').prepend(
+                    "<button type='button' class='btn btn-outline-light btn-block' onclick=\"alterDiv('Cadastrar');\" data-dismiss='modal'>Cadastrar-se</button><br/>"
+                );
                 $('#btnEntrarControle').click();
             }
             else{
                 frase = "";
                 switch(p){
+                    case 0:
+                        frase = "<b class='text-warning'>Você deslogou do PCtrl!</b><br/>";
+                        frase+= "<div class='d-flex justify-content-between align-items-center border border-secondary rounded p-1 mt-2'>";
+                        frase+= "<span class='material-icons mx-2'>warning</span>";
+                        frase+= "<small class='d-inline-block text-left ml-1' style='opacity: .6'>";
+                        frase+= "Caso esteja logado no MatthewsWorld é recomendado também fazer log-off para não haver conflito entre as contas!";
+                        frase+="</small>";
+                        frase+= "</div>";
+                        break;
                     case 1:
-                        frase = "Erro de Cadastro!<br/>Tente novamente, ou acesse <a href='https://www.matthewsworld.me/index.php?contato' target='_blank'>matthewsworld.me/index.php?contato</a> e registre o problema de cadastro.";
+                        frase = "Erro de Cadastro!<br/>";
+                        frase+= "Tente novamente, ou acesse ";
+                        frase+= "<a href='https://www.matthewsworld.me/index.php?contato' target='_blank'>";
+                        frase+= "matthewsworld.me/index.php?contato";
+                        frase+= "</a> ";
+                        frase+= "e registre o problema de cadastro.";
                         break;
                     case 2: frase = "<strong>Login Expirou!</strong><br/>Entre novamente para acessar a sua conta."; break;
                     case 3: frase = "<strong>Email ou Senha Incorretos!</strong><br/>Tente logar novamente."; break;
                 }
-                if(p==1){
+                if(p==0||p==1){
                     msg(0,new Array(frase));
                 }else if(p==2 || p==3){
                     alerta = "<div class='alert alert-danger alert-dismissible fade show text-left' style='text-shadow: none;' role='alert'>"+frase+"<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";

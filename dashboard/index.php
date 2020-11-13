@@ -389,7 +389,7 @@
             </div>
         </div>
         <a class="py-2 d-none d-md-inline-block" href="#" onclick="$('#modalCalculadoraAutoClick').click();">Calculadora</a>
-        <a class="py-2 d-none d-md-inline-block" href="../">Sair</a>
+        <a class="py-2 d-none d-md-inline-block" href="../index.php?logout">Sair</a>
         <?php if(isset($_SESSION['user_mtworld'])&&$_SESSION['user_mtworld']>0){ ?>
         <a class="py-2 d-none d-md-inline-block" style="opacity: .9" id="aMatthNavigate" onclick="$('#matthNavigate').modal('show');" href="#">
             <span class="material-icons align-middle">ac_unit</span>
@@ -422,7 +422,7 @@
                     </div>
                 </div>
                 <a class="py-2" href="#" onclick="$('#modalCalculadoraAutoClick').click();">Calculadora</a>
-                <a class="py-2" href="../">Sair</a>
+                <a class="py-2" href="../index.php?logout">Sair</a>
                 <?php if(isset($_SESSION['user_mtworld'])&&$_SESSION['user_mtworld']>0){ ?>
                 <a class="py-2" style="opacity: .9" id="aMatthNavigate" onclick="$('#matthNavigate').modal('show');" href="#">
                     <span class="material-icons align-middle">ac_unit</span>

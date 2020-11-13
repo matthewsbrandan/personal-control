@@ -6,6 +6,7 @@
     $data = enviarComand($search,'bd_pctrl');
     if($result = $data->fetch_assoc()){
         $_SESSION['pctrl_user'] = $result['id'];
+        // Vinculo mtworld
         if(isset($_GET['mtworld'])&&isset($_SESSION['user_mtworld'])){
             $pctrl_id = 3;
             $sql = "select id from user_sites where usuario_id='{$_SESSION['user_mtworld']}' and sites_id='$pctrl_id';";

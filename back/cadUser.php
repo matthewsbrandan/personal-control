@@ -1,4 +1,5 @@
 <?php
+    session_start();
     if(isset($_POST['btnCadastrar'])){        
         include('../../conn/function.php');
         $senha = md5($_POST['cadSenha']);
@@ -19,7 +20,8 @@
                         if(enviarComand($sql,'bd_mtworld')) header('Location: ../dashboard/index.php?vinculado=1');
                         else header('Location: ../dashboard/index.php?vinculado=0');
                     }else header('Location: ../dashboard/index.php?vinculado=0');
-                }else header('Location: ../dashboard/');
+                }
+                else header('Location: ../dashboard/');
             }else header('Location: ../index.php?msg=1');
         }else header('Location: ../index.php?msg=1');
     }
