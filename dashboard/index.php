@@ -122,8 +122,8 @@
                 { echo "'<span class=\'text-danger font-weight-bold\'>{$_GET['errMult']}</span> ";
                   if($_GET['errMult']==1) echo "Movimentação não pode ser realizada!'";
                   else echo "Movimentações não puderam ser realizadas!'";
-                }?>]); <?php } ?>
-            $('#modalIntable').modal('show');
+                }?>]);
+            <?php } ?>
         });
         function msg(p,arr){
             if(arr[p]){
@@ -252,6 +252,36 @@
             }
         }
         function tableIntercala(nav,i){
+            total = $('#nav'+nav+' ul li').length-1; 
+            if(total>5){
+                if(i-1>0 && $('#nav'+nav+'-'+(i-1)).hasClass('d-none')){
+                    $('#nav'+nav+'-'+(i-1)).removeClass('d-none');
+                    if(i+4<=total && !$('#nav'+nav+'-'+(i+4)).hasClass('d-none')){
+                        $('#nav'+nav+'-'+(i+4)).addClass('d-none');
+                    }
+                }
+                if(i>2){
+                    if(i+3<=total){
+                        hide = i-2;
+                        while(hide>=1){
+                            if(!$('#nav'+nav+'-'+hide).hasClass('d-none')){
+                                // alert('#nav'+nav+'-'+hide);
+                                $('#nav'+nav+'-'+hide).addClass('d-none');
+                            }
+                            hide--;
+                        }
+                    
+                        show = i+1;
+                        while(show<=i+3){
+                            if($('#nav'+nav+'-'+show).hasClass('d-none')){
+                                // alert('#nav'+nav+'-'+show);
+                                $('#nav'+nav+'-'+show).removeClass('d-none');
+                            }
+                            show++;
+                        }
+                    }
+                }
+            }
             v = $('#div'+nav+' table tbody tr').length;
             $('#div'+nav+' table tbody tr').hide();
             for(cont=((i*4)-3);cont<=(i*4);cont++){ $('#div'+nav+' table tbody tr:nth-child('+cont+')').show(); }
@@ -268,7 +298,15 @@
                     qtd = Math.ceil(v/4);
                     if(qtd>2){
                         for(i=3;i<=qtd;i++){
-                            ap = "<li class='page-item text-primary' id='nav"+p+"-"+i+"' onclick=\"tableIntercala('"+p+"',"+i+")\"><a class='page-link'>"+i+"</a></li>";
+                            if(i>5){
+                                ap = "<li class='page-item text-primary d-none' id='nav"+p+"-"+i+"' onclick=\"tableIntercala('"+p+"',"+i+")\"><a class='page-link'>"+i+"</a></li>";
+                            }else{
+                                ap = "<li class='page-item text-primary' id='nav"+p+"-"+i+"' onclick=\"tableIntercala('"+p+"',"+i+")\"><a class='page-link'>"+i+"</a></li>";
+                            }
+                            $('#nav'+p+' ul').append(ap);
+                        }
+                        if(qtd>5){
+                            ap = "<li class='page-item text-primary'><a class='page-link'>...</a></li>";
                             $('#nav'+p+' ul').append(ap);
                         }
                     }
@@ -487,14 +525,14 @@
       <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden" id="divPendente">
         <!--Header-->
         <div class="my-3 py-3">
-          <h2 class="display-5">
+          <h2 class="display-5 d-flex flex-nowrap justify-content-center">
             Movimentações Pendentes
             <div class="btn-group dropleft">
                 <button type="button" class="btn text-light px-0 rounded-right" style="max-width: 30px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownPendente"><i class="material-icons align-middle">more_vert</i></button>
                 <div class="dropdown-menu" aria-labelledby="dropdownPendente">
                     <a class="dropdown-item text-warning text-center expandir-row-1 d-none d-md-inline-block" onclick="altWrap(1,true);">Expandir <i class="material-icons align-middle girar90">unfold_more</i></a>
                     <a class="dropdown-item text-warning text-center recolher-row-1 d-none" onclick="altWrap(1,false);">Recolher <i class="material-icons align-middle girar90">unfold_less</i></a>
-                    <a class="dropdown-item text-info text-center" href="imp.php" target="_blank">Relatório <i class="material-icons align-middle">system_update_alt</i></a>
+                    <a class="dropdown-item text-info text-center" href="../report">Relatório <i class="material-icons align-middle">system_update_alt</i></a>
                     <a class="dropdown-item text-success text-center" href="index.php?gerenciar=1<?php echo mesGet('&'); ?>#divPendente">Finalizar <i class="material-icons align-middle">queue</i></a>
                     <div class="text-center d-block bg-secondary text-light border-top"><small>Filtro</small></div>
                     <div class="font-weight-normal pt-2 px-2 text-muted">
@@ -604,7 +642,7 @@
       <div class="bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden" id="divCaixa">
         <!--Header-->
         <div class="my-3 p-3">
-            <h2 class="display-5">
+            <h2 class="display-5 d-flex flex-nowrap justify-content-center">
                 Caixa - <?php echo (isset($_GET['calendarM'])?$mesCalendar[$_GET['calendarM']]:$mesCalendar[intval(date('m'))]).'/'.(isset($_GET['calendarY'])?$_GET['calendarY']:date('Y')); ?>
                 <div class="btn-group dropleft">
                     <button type="button" class="btn px-0 rounded-right" style="max-width: 30px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownCaixa"><i class="material-icons align-middle">more_vert</i></button>
@@ -690,14 +728,14 @@
       <div class="bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden" id="divMovimento">
         <!--Header-->
         <div class="my-3 p-3">
-            <h2 class="display-5">
+            <h2 class="display-5 d-flex flex-nowrap justify-content-center">               
                 Movimentações - <?php echo (isset($_GET['calendarM'])?$mesCalendar[$_GET['calendarM']]:$mesCalendar[intval(date('m'))]).'/'.(isset($_GET['calendarY'])?$_GET['calendarY']:date('Y')); ?>
                 <div class="btn-group dropleft">
                     <button type="button" class="btn px-0 rounded-right" style="max-width: 30px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMovimento"><i class="material-icons align-middle">more_vert</i></button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMovimento">
                         <a class="dropdown-item text-warning text-center expandir-row-2 d-none d-md-inline-block" onclick="altWrap(2,true);">Expandir <i class="material-icons align-middle girar90">unfold_more</i></a>
                         <a class="dropdown-item text-warning recolher-row-2 d-none" onclick="altWrap(2,false);">Recolher <i class="material-icons align-middle girar90">unfold_less</i></a>
-                        <a class="dropdown-item text-info" href="imp.php" target="_blank">&nbsp Relatório <i class="material-icons align-middle">system_update_alt</i></a>
+                        <a class="dropdown-item text-info" href="../report">&nbsp Relatório <i class="material-icons align-middle">system_update_alt</i></a>
                         <a class="dropdown-item text-success text-center" href="index.php?gerenciar=1<?php echo mesGet('&'); ?>#divMovimento">Finalizar <i class="material-icons align-middle">queue</i></a>
                         <div class="text-center d-block bg-secondary text-light border-top">
                         <small>Filtro</small>
@@ -810,7 +848,7 @@
       <div class="bg-primary mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden" id="divCategoria">
         <!--Header-->
         <div class="my-3 py-3">
-          <h2 class="display-5">
+          <h2 class="display-5 d-flex flex-nowrap justify-content-center">
               Agrupado por Categoria
               <div class="btn-group dropleft">
                     <button type="button" class="btn text-light px-0 rounded-right" style="max-width: 30px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownCategoria"><i class="material-icons align-middle">more_vert</i></button>
@@ -887,7 +925,7 @@
       <div class="bg-primary mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden" id="divParcela">
         <!--Header-->
         <div class="my-3 p-3">
-          <h2 class="display-5">
+          <h2 class="display-5 d-flex flex-nowrap justify-content-center">
               Agrupado por Parcela
               <div class="btn-group dropleft">
                     <button type="button" class="btn text-light px-0 rounded-right" style="max-width: 30px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownGrupo"><i class="material-icons align-middle">more_vert</i></button>
@@ -965,7 +1003,7 @@
       <div class="bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden" id="divObjetivo">
         <!--Header-->
         <div class="my-3 py-3">
-          <h2 class="display-5">
+          <h2 class="display-5 d-flex flex-nowrap justify-content-center">
               Objetivos !
               <div class="btn-group dropleft">
                     <button type="button" class="btn px-0 rounded-right" style="max-width: 30px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownObjetivo"><i class="material-icons align-middle">more_vert</i></button>
@@ -1052,7 +1090,7 @@
       <div id="divRow4a">
       <div class="bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden" id="divChartCircle">
         <div class="my-3 p-3">
-          <h2 class="display-5">
+          <h2 class="display-5 d-flex flex-nowrap justify-content-center">
               Gráfico de Pizza
               <div class="btn-group dropleft">
                     <button type="button" class="btn px-0 rounded-right" style="max-width: 30px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownCircle"><i class="material-icons align-middle">more_vert</i></button>
@@ -1083,7 +1121,7 @@
       <div id="divRow4b">
       <div class="bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden" id="divChartBar">
         <div class="my-3 py-3">
-          <h2 class="display-5">
+          <h2 class="display-5 d-flex flex-nowrap justify-content-center">
               Gráfico de Barra
               <div class="btn-group dropleft">
                     <button type="button" class="btn px-0 rounded-right" style="max-width: 30px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownBar"><i class="material-icons align-middle">more_vert</i></button>

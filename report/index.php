@@ -29,7 +29,7 @@
     <!-- Bootstrap core CSS -->
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="product.css" rel="stylesheet">
+    <link href="../dashboard/product.css" rel="stylesheet">
     <style>
         body{
             background: #eee;
@@ -78,7 +78,7 @@
     </script>
   </head>
   <body>
-      <a href="./" class="p-1 px-3 text-dark ml-3 mt-0 position-absolute border rounded btn-back">
+      <a href="../dashboard/" class="p-1 px-3 text-dark ml-3 mt-0 position-absolute border rounded btn-back">
         <span class="material-icons align-middle">arrow_back</span>  
       </a>
       <section class="mb-5">

@@ -7,6 +7,7 @@
         $res = $data->fetch_assoc();
         if($res){ $_SESSION['nome'] = $res['nome']; $_SESSION['sobrenome'] = $res['sobrenome']; }
     }
+    if(!isset($_FILES['fileMov'])||empty($_FILES['fileMov'])) header('Location: ../dashboard/index.php?errMult=-1');
 ?>
 <!doctype html>
 <html lang="en">
@@ -66,9 +67,12 @@
             }
         }
         function alterAll(elem){
-            if(elem.attr('title')=="Categoria"){
-                alert('Aqui');
-            }
+            if(elem.attr('title')=="Categoria")
+            { $("select[title|='Categoria']").val(elem.val()); }
+            if(elem.attr('title')=="Relevância")
+            { $("[title|='Relevância'] input").val(elem.val()); }
+            if(elem.attr('title')=="Status")
+            { $("[title|='Status'] select").val(elem.val()); }
         }
         function msg(p){
             $('#modalMsgBody').html(p);
@@ -83,12 +87,12 @@
                     $(this).addClass('text-danger');
                 } 
             });
-        <?php 
-            if(isset($_GET['erro'])){
-                if($_GET['erro']==0)
-                    echo " msg('Formato de dados Incompatível. Certifique-se de que sua planilha está dentro dos padrões.'); ";
-            }
-        ?>
+            <?php 
+                if(isset($_GET['erro'])){
+                    if($_GET['erro']==0)
+                        echo " msg('Formato de dados Incompatível. Certifique-se de que sua planilha está dentro dos padrões.'); ";
+                }
+            ?>
         });
     </script>
   </head>
@@ -132,14 +136,14 @@
                                     foreach($resCat as $value){ $content .= "<option value=\'".$value['id']."\'>".$value['nome']."</option>"; }
                                     $content .= "</select>";
 
-                                    $content .= "<div class=\'input-group m-1\' title=\'Relevância\'>";
-                                    $content .= "<input type=\'number\' class=\'form-control\' value=\'3\' min=\'1\' max=\'5\'>";
+                                    $content .= "<div class=\'input-group m-1\'>";
+                                    $content .= "<input type=\'number\' class=\'form-control\' title=\'Relevância\' value=\'3\' min=\'1\' max=\'5\' onchange=\'alterAll($(this));\'>";
                                     $content .= "<div class=\'input-group-append\'>";
                                     $content .= "<div class=\'input-group-text text-warning border-0 bg-dark\'>&#9733</div>";
                                     $content .= "</div></div>";
 
-                                    $content .= "<div class=\'input-group m-1\' title=\'Status\'>";
-                                    $content .= "<select class=\'form-control\'>";
+                                    $content .= "<div class=\'input-group m-1\'>";
+                                    $content .= "<select class=\'form-control\' title=\'Status\' onchange=\'alterAll($(this));\'>";
                                     foreach($resConta as $value)
                                     { $content .= "<option value=\'".$value['id']."\'>".$value['nome']."</option>"; }
                                     $content .= "</select>";
@@ -171,8 +175,8 @@
                                     return $value;
                                 }
 
-                                if(isset($_FILES['fileMov'])) $arr = file($_FILES['fileMov']['tmp_name']);
-                                else header('Location: ../dashboard/index.php?errMult=-1');
+                                $arr = file($_FILES['fileMov']['tmp_name']);
+
                                 $arr = array_reverse($arr);
                                 for($i=0;$i<count($arr);$i++){
                                     if(strlen(trim(str_replace(';','',$arr[$i])))==0){ unset($arr[$i]); }

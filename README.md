@@ -15,7 +15,7 @@
 
 ## Features
 
-- [ ] Finalizar funcionalidade de cadastro de multiplas movimentações
+- [x] Finalizar funcionalidade de cadastro de multiplas movimentações
 - [ ] CRUD de Objetivos
 - [ ] Gráficos
 - [ ] Converter dados em Planilha .xlsx

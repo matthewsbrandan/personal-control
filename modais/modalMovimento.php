@@ -56,7 +56,7 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMais">
                                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalCategoria">Nova Categoria</a>
                                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalConta">Nova Conta</a>
-                                    <a class="dropdown-item" href="../intable/">Inserção em Tabela</a>
+                                    <a class="dropdown-item" href="#" onclick="$('#modalIntable').modal('show');">Inserção em Tabela</a>
                                     <a class="dropdown-item" href="#" onclick="$('#modalCalculadoraAutoClick').click();">Calculadora</a>
                                 </div>
                             </div>

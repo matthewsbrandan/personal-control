@@ -27,7 +27,7 @@
             <form method="POST" action="../intable/" enctype="multipart/form-data">
                 <button type="button" class="btn btn-danger btn-block active font-weight-bold"
                     onclick="$(this).next().toggle();">Importar Planilha .CSV</button>
-                <div style="display: none;">
+                <div>
                     <ul class="list-group my-3">
                         <li class="list-group-item text-center">
                             <b>Regras:</b>
@@ -74,35 +74,13 @@
                         <button type="submit" class="btn btn-sm btn-block btn-outline-success font-weight-bold mb-3">Finalizar</button>
                     </div>
                 </div>
-                <button type="button" class="btn btn-info btn-block font-weight-bold mt-2">
-                    Digitar Manualmente
-                </button>
-                <div style="display: none;">
-                    <ul class="list-group my-3">
-                        <li class="list-group-item text-center">
-                            <b>Regras:</b>
-                        </li>
-                        <li class="list-group-item">
-                            <b>1.</b> Crie uma planilha no excel com o formato .CSV
-                        </li>
-                        <li class="list-group-item">
-                            <b>2.</b> A planilha deve ter três colunas com <em>Data, Descrição e Valor</em>, nesta exata ordem, com todos campos preenchidos.
-                        </li>
-                        <li class="list-group-item">
-                            <b>3.</b> A data deve ser no padrão brasileiro, usando / e 4 digitos para o ano <span class="text-muted">(dd/mm/aaaa)</span>.
-                        </li>
-                        <li class="list-group-item">
-                            <b>4.</b> Não use '.' para separar casas de milhar no campo valor <span class="text-muted">(<s>1.000,00</s> &rarr; 1000,00)</span>.
-                        </li>
-                        <li class="list-group-item text-center">
-                            <div><b>Exemplo:</b></div>
-                            <div class="text-muted border p-2 rounded">22/03/2019;Descrição da Movimentação;99,99;</div>
-                        </li>
-                        <li class="list-group-item text-center">
-                            <b>Pronto!</b>
-                        </li>
-                    </ul>
-                </div>
+                <!-- EM DESENVOLVIMENTO
+                    <div style="display: none;">
+                        <button type="button" class="btn btn-info btn-block font-weight-bold mt-2">
+                            Digitar Manualmente
+                        </button>                    
+                    </div> 
+                -->
             </form>
             </div>
         </div>
