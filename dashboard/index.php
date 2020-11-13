@@ -99,6 +99,7 @@
     <script src="../back/mascara.js"></script>
     <!--Arrays - Msg | Functions-->
     <script>
+        var arrVinculo = new Array("Houve um erro ao tentar vincular sua conta ao MatthewsWorld. Tente mais tarde!","Site Vinculado");
         var arrCategoriaMsg = new Array("","","","Não é possível cadastrar uma Categoria com este nome!<br><em>Outros, Transferência e Margem de Erro</em> já são categorias padrões do PCtrl, então não podem ser nem adicionadas novamente, nem excluídas.","Preencha o nome da Categoria!");
         var arrReset = new Array('Usuário Reiniciado!','Não foi possível restaurar seu Usuário','Apenas os Objetivos foram Apagados','Objetivos e Movimentações Apagados.','Objetivos, Movimentações e Parcelas Apagadas');
         var arrApagar = new Array('Deletado com Sucesso!','Erro ao Excluir Movimentação!');
@@ -107,6 +108,7 @@
         var arrFmm = new Array('Movimentações Finalizadas com Sucesso!','Nenhuma Movimentação Selecionada!','Selecione a conta que realizara as Movimentações!','Houve um erro ao realizar o Pagamento!');
         var arrFgc = new Array("Não foi possível transferir as Categorias, tente novamente!","Categoria Deletada com Sucesso!","Houve um erro ao tentar Excluir esta Categoria!","Categoria Alterada com Sucesso!","Houve um erro ao tentar Alterar esta Categoria");
         $(function(){
+            <?php if(isset($_GET['vinculado'])){ ?> msg(<?php echo $_GET['vinculado']; ?>,arrVinculo); <?php } ?>
             <?php if(isset($_GET['reset'])){ ?> msg(<?php echo $_GET['reset']; ?>,arrReset); <?php } ?>
             <?php if(isset($_GET['cat'])&&$_GET['cat']>2){ ?> msg(<?php echo $_GET['cat']; ?>,arrCategoriaMsg); <?php } ?>
             <?php if(isset($_GET['apagar'])){ ?> msg(<?php echo $_GET['apagar']; ?>,arrApagar); <?php } ?>
@@ -1175,10 +1177,8 @@
       include('../modais/modalIntable.php');            //Modal Inserção em Tabela
       include('../modais/modalConfirma.php');           //Modal Confirmação
       include('../modais/modalMsg.php');                //Modal Mensagem
-      include('../../function/ctrlm.php');
-      include('../../function/mnav.php');
-      include('../../function/arty.php');
-      include('../../function/wmatth.php');
+      include('../../function/global.php');
+      
     ?>
     <!-- Bootstrap core JavaScript ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

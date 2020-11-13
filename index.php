@@ -19,9 +19,10 @@
     <script src="../jquery/jquery.js"></script>
     <script>
         $(function(){
-           <?php if(isset($_GET['cadastrar'])){ ?> alterDiv('Cadastrar');                   <?php }else ?> 
-           <?php if(isset($_GET['sobre']))    { ?> alterDiv('Sobre');                       <?php }     ?> 
-           <?php if(isset($_GET['msg']))      { ?> mostraMsg(<?php echo $_GET['msg']; ?>);  <?php }     ?> 
+           <?php if(isset($_GET['cadastrar'])){ ?> alterDiv('Cadastrar');                      <?php }else ?> 
+           <?php if(isset($_GET['sobre']))    { ?> alterDiv('Sobre');                          <?php }     ?> 
+           <?php if(isset($_GET['msg']))      { ?> mostraMsg(<?php echo $_GET['msg']; ?>);     <?php }     ?> 
+           <?php if(isset($_GET['mtworld']))  { ?> mostraMsg(<?php echo "'mtworld'"; ?>); <?php }     ?>
         });
         function msg(p,arr){ 
             if(arr[p]){ $('#modalMsgBody').html(arr[p]); $('#modalMsgAutoClick').click(); }
@@ -30,20 +31,31 @@
             $('#modalMsgBody a').addClass('text-warning');
         }
         function mostraMsg(p){
-            frase = "";
-            switch(p){
-                case 1:
-                    frase = "Erro de Cadastro!<br/>Tente novamente, ou acesse <a href='www.matthewsworld.life/contato'>matthewsworld.life/contato</a> e registre o problema de cadastro.";
-                    break;
-                case 2: frase = "<strong>Login Expirou!</strong><br/>Entre novamente para acessar a sua conta."; break;
-                case 3: frase = "<strong>Email ou Senha Incorretos!</strong><br/>Tente logar novamente."; break;
-            }
-            if(p==1){
-                msg(0,new Array(frase));
-            }else if(p==2 || p==3){
-                alerta = "<div class='alert alert-danger alert-dismissible fade show text-left' style='text-shadow: none;' role='alert'>"+frase+"<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
-                $('#modalLog .modal-body').prepend(alerta);
+            if(p=="mtworld"){
+                content = "<div class='bg-light border border-secondary px-1 pb-1 pt-0 mb-2 rounded d-flex justify-content-center text-dark flex-column' style='opacity:.6'>";
+                    content += "<small class='border-bottom border-secondary mb-1' style='font-size: 7pt; opacity: .85;'>Vincular com MatthewsWorld</small>";
+                    content += "<span class='material-icons'>ac_unit</span>";
+                content += "</div>";
+                $('#modalLog .modal-body').prepend(content);
+                $('#modalLog .modal-footer').prepend("<button type='button' class='btn btn-outline-light btn-block' onclick=\"alterDiv('Cadastrar');\" data-dismiss='modal'>Cadastrar-se</button><br/>");
                 $('#btnEntrarControle').click();
+            }
+            else{
+                frase = "";
+                switch(p){
+                    case 1:
+                        frase = "Erro de Cadastro!<br/>Tente novamente, ou acesse <a href='https://www.matthewsworld.me/index.php?contato' target='_blank'>matthewsworld.me/index.php?contato</a> e registre o problema de cadastro.";
+                        break;
+                    case 2: frase = "<strong>Login Expirou!</strong><br/>Entre novamente para acessar a sua conta."; break;
+                    case 3: frase = "<strong>Email ou Senha Incorretos!</strong><br/>Tente logar novamente."; break;
+                }
+                if(p==1){
+                    msg(0,new Array(frase));
+                }else if(p==2 || p==3){
+                    alerta = "<div class='alert alert-danger alert-dismissible fade show text-left' style='text-shadow: none;' role='alert'>"+frase+"<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+                    $('#modalLog .modal-body').prepend(alerta);
+                    $('#btnEntrarControle').click();
+                }
             }
         }
         function alterDiv(p){
@@ -73,7 +85,14 @@
       <!-- Header -->
       <header class="masthead mb-auto">
         <div class="inner">
-          <h3 class="masthead-brand">PCtrl $</h3>
+          <h3 class="masthead-brand">
+            PCtrl $
+            <?php if(isset($_GET['mtworld'])){ ?>
+            <div class="d-inline-block border px-1 rounded bg-light text-dark" onclick="location.href='https://www.matthewsworld.me'">
+                <span class="material-icons">ac_unit</span>
+            </div>
+            <?php } ?>
+          </h3>
           <nav class="nav nav-masthead justify-content-center">
             <a onclick="alterDiv('Entrar')"    id="btnEntrar"    class="nav-link active" href="#">Entrar</a>
             <a onclick="alterDiv('Cadastrar')" id="btnCadastrar" class="nav-link"        href="#">Cadastrar</a>
@@ -94,18 +113,46 @@
         <div id="divCadastrar" style="display:none;">
             <h1 class="cover-heading">Cadastrar-se</h1>
             <p class="lead">Preencha os campos para se cadastrar no Personal Control, e tenha o controle sobre suas finanças.<br></p>
-            <form method="POST" action="back/cadUser.php">
+            <form method="POST" action="back/cadUser.php<?php if(isset($_GET['mtworld'])) echo "?mtworld";?>">
                 <!--Nome-->
                 <div class="input-group mb-3">
-                    <input class="form-control" type="text" id="cadNome" name="cadNome" placeholder="Digite seu Primeiro Nome..." required>
+                    <input 
+                        class="form-control" 
+                        type="text" 
+                        id="cadNome" name="cadNome" 
+                        placeholder="Digite seu Primeiro Nome..." 
+                        <?php if(isset($_SESSION['user_mtworld_nome'])){
+                            $autoCompleteName = $_SESSION['user_mtworld_nome'];
+                            if(strpos($_SESSION['user_mtworld_nome'],' ')>0)
+                            { $autoCompleteName = substr($_SESSION['user_mtworld_nome'],0,strpos($_SESSION['user_mtworld_nome'],' ')); }
+                            echo "value='$autoCompleteName'";
+                        } ?>
+                    required>
                 </div>
                 <!--Sobrenome-->
                 <div class="input-group mb-3">
-                    <input class="form-control" type="text" id="cadSobrenome" name="cadSobrenome" placeholder="Digite seu Último Nome..." required>
+                    <input 
+                        class="form-control" 
+                        type="text" 
+                        id="cadSobrenome" name="cadSobrenome" 
+                        placeholder="Digite seu Último Nome..." 
+                        <?php if(isset($_SESSION['user_mtworld_nome'])){
+                            $autoCompleteSurname = "";
+                            if(strpos($_SESSION['user_mtworld_nome'],' ')>0)
+                            { $autoCompleteSurname = substr($_SESSION['user_mtworld_nome'],strpos($_SESSION['user_mtworld_nome'],' ')+1); }
+                            echo "value='$autoCompleteSurname'";
+                        } ?>
+                    required>
                 </div>
                 <!--Email-->
                 <div class="input-group mb-3">
-                    <input class="form-control" type="email" id="cadEmail" name="cadEmail" placeholder="Digite seu E-mail..." required>
+                    <input 
+                        class="form-control" 
+                        type="email" 
+                        id="cadEmail" name="cadEmail" 
+                        placeholder="Digite seu E-mail..."
+                        <?php if(isset($_SESSION['user_mtworld_email'])) echo "value='{$_SESSION['user_mtworld_email']}'";?>
+                    required>
                 </div>
                 <!--Celular-->
                 <div class="input-group mb-3">
@@ -129,7 +176,7 @@
             <h1 class="cover-heading">Sobre</h1>
             <p class="lead">Desenvolvido por mim, Mateus Brandão, Técnico em Administração de Empresas e Técnico em Informática, juntando o conhecimento financeiro com a criatividade para criar a ferramenta correta e mais eficiente possível para administrar suas finanças, de forma <strong>Gratuita</strong>.</p>
             <p class="lead">
-              <a href="https://www.matthewsworld.life" target="_blank" class="btn btn-lg btn-secondary">+ Sobre o Desenvolvedor { }</a>
+              <a href="https://www.matthewsworld.me" target="_blank" class="btn btn-lg btn-secondary">+ Sobre o Desenvolvedor { }</a>
             </p>
         </div>
       </main>
@@ -145,7 +192,7 @@
     <div class="modal fade" id="modalLog" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="">
         <div class="modal-dialog" role="document">
             <div class="modal-content bg-dark">
-                <form method="POST" action="back/logUser.php">
+                <form method="POST" action="back/logUser.php<?php if(isset($_GET['mtworld'])) echo '?mtworld';?>">
                 <div class="modal-header">
                     <h5 class="modal-title">PCtrl - Entrar</h5>
                     <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -153,7 +200,13 @@
                 <div class="modal-body">
                     <label for="email" class="h4 pb-1" style="font-weight: 200;">Login</label>
                     <div class="form-group">
-                        <input class="form-control" type="email" id="modalEmail" name="modalEmail" placeholder="Digite seu E-mail..." required>
+                        <input 
+                            class="form-control"
+                            type="email" 
+                            id="modalEmail" name="modalEmail" 
+                            placeholder="Digite seu E-mail..."
+                            <?php if(isset($_SESSION['user_mtworld_email'])) echo "value='{$_SESSION['user_mtworld_email']}'";?>    
+                        required>
                     </div>
                     <div class="form-group mb-1">
                         <input class="form-control" type="password" id="modalSenha" name="modalSenha" placeholder="Digite sua Senha..." required>

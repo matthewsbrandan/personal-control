@@ -251,10 +251,7 @@
         </div>
         <?php 
             include('../modais/modalMsg.php');
-            include('../../function/ctrlm.php');
-            include('../../function/mnav.php');
-            include('../../function/arty.php');
-            include('../../function/wmatth.php');
+            include('../../function/global.php');
         ?>
       </section>
       <!-- Bootstrap core JavaScript ================================================== -->
